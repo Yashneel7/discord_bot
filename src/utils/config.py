@@ -28,7 +28,7 @@ class Config:
     """Configuration class."""
 
     # The bot only ever runs on a single guild, so this is a constant.
-    GUILD_ID = 742797665301168220
+    GUILD_ID = 1368604371323064421
 
     # Different clusters, same DB name.
     DB_NAME = "discord"
@@ -73,6 +73,7 @@ class Config:
         "LINKED": 749683320941445250,
         "JUST_JOINED": 798765678739062804,
         "MUTED": 775981947079491614,
+        "DEV_ENGINEER":1549436277546426508,
     }
 
     # Guild academic roles use this color (#818689).
@@ -260,3 +261,8 @@ class Config:
     def honeypot_channel(self) -> discord.TextChannel | discord.Thread:
         """Get honeypot channel."""
         return self.get_channel("HONEYPOT")
+
+    @property
+    def dev_engineer_role(self) -> discord.Role:
+            """Get bot engineer role."""
+            return self.get_role("DEV_ENGINEER")
