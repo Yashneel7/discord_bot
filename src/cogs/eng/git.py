@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from typing import TYPE_CHECKING
 
 import discord
@@ -12,8 +13,10 @@ from src.utils import decorators as bot_decorators
 if TYPE_CHECKING:
     from src.bot import DiscordBot
 
+
 class EngGitCommands:
     client: DiscordBot
+
     @EngGroups.eng_git.command(name="join", description="Become part of the developer team")
     @app_commands.describe(
         user_id="Your GitHub user id",
@@ -24,19 +27,19 @@ class EngGitCommands:
     @bot_decorators.handle_command_errors()
     async def join(self, interaction: discord.Interaction, user_id: int) -> None:
         print("ok")
-        url="https://api.github.com/orgs/pesu-dev/invitations"
-        header={
-            "Authorization":"Bearer token" #use env variable for token
+        url = "https://api.github.com/orgs/pesu-dev/invitations"
+        token = os.getenv("GITHUB_ORG_TOKEN")
+        header = {
+            "Authorization": f"Bearer {token}"  # use env variable for token
         }
-        payload={
-            "invitee_id":user_id, #put it as an integer
-
+        payload = {
+            "invitee_id": user_id,  # put it as an integer
         }
         async with httpx.AsyncClient() as client:
             try:
-                resp=await client.post(url,headers=header,json=payload,timeout=10.0)
+                resp = await client.post(url, headers=header, json=payload, timeout=10.0)
                 resp.raise_for_status()
-                if resp.status_code==201:
+                if resp.status_code == 201:
                     await interaction.followup.send(content="Sent invitation for organisation!")
             except httpx.HTTPStatusError as exc:
                 status = exc.response.status_code

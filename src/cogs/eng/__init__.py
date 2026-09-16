@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from src.bot import DiscordBot
 
 
-class SlashEng(EngGroups, EngCommands, EngMongoCommands,EngGitCommands, Cog):
+class SlashEng(EngGroups, EngCommands, EngMongoCommands, EngGitCommands, Cog):
     def __init__(self, client: DiscordBot) -> None:
         self.client = client
         self.tasks = [self.expire_eng_mongo_loop]
