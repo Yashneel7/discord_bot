@@ -28,7 +28,7 @@ class Config:
     """Configuration class."""
 
     # The bot only ever runs on a single guild, so this is a constant.
-    GUILD_ID = 1368604371323064421
+    GUILD_ID = 742797665301168220
 
     # Different clusters, same DB name.
     DB_NAME = "discord"
@@ -73,7 +73,7 @@ class Config:
         "LINKED": 749683320941445250,
         "JUST_JOINED": 798765678739062804,
         "MUTED": 775981947079491614,
-        "DEV_ENGINEER": 1549436277546426508,
+        "DEV_ENGINEER": 810507351063920671,
     }
 
     # Guild academic roles use this color (#818689).
@@ -135,6 +135,7 @@ class Config:
         self.db_name = self.DB_NAME
         env_cfg = self.ENVIRONMENTS[env]
         self.mongo_uri = env_cfg["mongo_uri"]
+        self.github_org_token = os.getenv("GITHUB_ORG_TOKEN")
         self.atlas_projects = {
             name: AtlasProject(
                 group_id=spec["group_id"],

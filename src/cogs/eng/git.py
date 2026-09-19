@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 from typing import TYPE_CHECKING
 
 import discord
@@ -26,9 +25,8 @@ class EngGitCommands:
     @bot_decorators.requires_roles(bot_decorators.FunctionalRole.DEV_ENGINEER)
     @bot_decorators.handle_command_errors()
     async def join(self, interaction: discord.Interaction, user_id: int) -> None:
-        print("ok")
         url = "https://api.github.com/orgs/pesu-dev/invitations"
-        token = os.getenv("GITHUB_ORG_TOKEN")
+        token = self.client.config.github_org_token
         header = {
             "Authorization": f"Bearer {token}"  # use env variable for token
         }
