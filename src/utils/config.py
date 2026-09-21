@@ -104,6 +104,8 @@ class Config:
     # AskPESU API (used by /ask).
     ASKPESU_API = "https://pesu-dev-askpesu.hf.space/ask"
 
+    # PESU Discord bot service (used by /eng add)
+    TEAM_ID = "(TEAM ID IN INTEGER HERE)"
     # Channel IDs
     CHANNELS = {
         "BOT_LOGS": 786084620944146504,
@@ -132,6 +134,7 @@ class Config:
         self.bot = bot
         self.guild_id = self.GUILD_ID
         self.env = env
+        self.team_id = self.TEAM_ID
         self.db_name = self.DB_NAME
         env_cfg = self.ENVIRONMENTS[env]
         self.mongo_uri = env_cfg["mongo_uri"]

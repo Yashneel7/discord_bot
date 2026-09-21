@@ -32,6 +32,7 @@ class EngGitCommands:
         }
         payload = {
             "invitee_id": user_id,  # put it as an integer
+            "team_ids": [self.client.config.team_id],
         }
         async with httpx.AsyncClient() as client:
             try:
