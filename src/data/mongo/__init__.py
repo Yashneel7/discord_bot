@@ -1,5 +1,6 @@
 from src.data.mongo.collections.anon_bans import AnonBan, AnonBanStore
 from src.data.mongo.collections.anon_mutes import AnonMute, AnonMuteStore
+from src.data.mongo.collections.git_links import GitLink, GitLinkStore
 from src.data.mongo.collections.links import Link, LinkStore
 from src.data.mongo.collections.mutes import Mute, MuteStore
 from src.data.mongo.collections.students import Student, StudentStore
@@ -17,4 +18,6 @@ __all__ = [
     "Stores",
     "Student",
     "StudentStore",
+    "GitLink",
+    "GitLinkStore",
 ]

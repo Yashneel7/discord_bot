@@ -105,7 +105,10 @@ class Config:
     ASKPESU_API = "https://pesu-dev-askpesu.hf.space/ask"
 
     # PESU Discord bot service (used by /eng add)
-    TEAM_ID = "(TEAM ID IN INTEGER HERE)"
+    GITHUB_DEV_TEAM_ID = 13721979
+    GITHUB_APP_ID = 5114851
+    GITHUB_APP_INSTALLATION_ID = 165960075
+
     # Channel IDs
     CHANNELS = {
         "BOT_LOGS": 786084620944146504,
@@ -134,7 +137,13 @@ class Config:
         self.bot = bot
         self.guild_id = self.GUILD_ID
         self.env = env
-        self.team_id = self.TEAM_ID
+        self.github_dev_team_id = self.GITHUB_DEV_TEAM_ID
+        self.github_app_id = self.GITHUB_APP_ID
+        self.github_app_installation_id = self.GITHUB_APP_INSTALLATION_ID
+        self.github_app_private_key_path = os.getenv(
+            "GITHUB_APP_PRIVATE_KEY_PATH",
+            "scratch/github-app.pem",
+        )
         self.db_name = self.DB_NAME
         env_cfg = self.ENVIRONMENTS[env]
         self.mongo_uri = env_cfg["mongo_uri"]
