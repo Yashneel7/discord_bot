@@ -24,6 +24,13 @@ class AtlasProject:
     client_secret: str | None
 
 
+@dataclass(frozen=True, slots=True)
+class GitProject:
+    team_id: int | None
+    app_id: int | None
+    installation_id: int | None
+
+
 class Config:
     """Configuration class."""
 
@@ -64,7 +71,12 @@ class Config:
             "client_secret_env": "ATLAS_PROD_CLIENT_SECRET",
         },
     }
-
+    # GitHub App (/eng git join)
+    GITHUB = {
+        "team_id": 13721979,
+        "app_id": 5114851,
+        "installation_id": 165960075,
+    }
     ROLES = {
         "ADMIN": 742800061280550923,
         "MOD": 742798158966292640,
@@ -104,11 +116,6 @@ class Config:
     # AskPESU API (used by /ask).
     ASKPESU_API = "https://pesu-dev-askpesu.hf.space/ask"
 
-    # PESU Discord bot service (used by /eng add)
-    GITHUB_DEV_TEAM_ID = 13721979
-    GITHUB_APP_ID = 5114851
-    GITHUB_APP_INSTALLATION_ID = 165960075
-
     # Channel IDs
     CHANNELS = {
         "BOT_LOGS": 786084620944146504,
@@ -137,9 +144,9 @@ class Config:
         self.bot = bot
         self.guild_id = self.GUILD_ID
         self.env = env
-        self.github_dev_team_id = self.GITHUB_DEV_TEAM_ID
-        self.github_app_id = self.GITHUB_APP_ID
-        self.github_app_installation_id = self.GITHUB_APP_INSTALLATION_ID
+        self.github = GitProject(
+            team_id=self.GITHUB["team_id"], app_id=self.GITHUB["app_id"], installation_id=self.GITHUB["installation_id"]
+        )
         self.github_app_private_key_path = os.getenv(
             "GITHUB_APP_PRIVATE_KEY_PATH",
             "scratch/github-app.pem",
@@ -147,7 +154,6 @@ class Config:
         self.db_name = self.DB_NAME
         env_cfg = self.ENVIRONMENTS[env]
         self.mongo_uri = env_cfg["mongo_uri"]
-        self.github_org_token = os.getenv("GITHUB_ORG_TOKEN")
         self.atlas_projects = {
             name: AtlasProject(
                 group_id=spec["group_id"],

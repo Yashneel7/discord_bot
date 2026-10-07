@@ -39,7 +39,7 @@ class EngGitCommands:
             )
             return
 
-        url_id = f"https://api.github.com/users/{github_username}"
+        url_id = f"https://api.github.com/users/{username}"
         async with httpx.AsyncClient() as client:
             res = await client.get(url_id)
             if res.status_code == 404:
@@ -50,8 +50,8 @@ class EngGitCommands:
                 return
             content = res.json()
             user_id = content["id"]
-            git_app_id = self.client.config.github_app_id
-            git_app_install_id = self.client.config.github_app_installation_id
+            git_app_id = self.client.config.github.app_id
+            git_app_install_id = self.client.config.github.installation_id
             git_private_key = self.client.config.github_app_private_key_path
 
             try:
@@ -77,7 +77,7 @@ class EngGitCommands:
             }
             payload = {
                 "invitee_id": user_id,  # put it as an integer
-                "team_ids": [self.client.config.github_dev_team_id],
+                "team_ids": [self.client.config.github.team_id],
             }
 
             try:
@@ -92,8 +92,6 @@ class EngGitCommands:
                     )
                     await self.client.stores.git_links.insert_one(git_record)
                     await interaction.followup.send(content="Sent invitation for organisation!")
-
-                    await interaction.followup.send(content="Something went wrong in storing the details!")
 
             except httpx.HTTPStatusError as exc:
                 status = exc.response.status_code
@@ -111,3 +109,42 @@ class EngGitCommands:
                     content = "Something went wrong contacting GitHub. Please try again later."
 
                 await interaction.followup.send(content=content)
+
+    @EngGroups.eng_git.command(name="who", description="Identify a given user")
+    @app_commands.describe(
+        member="Discord member to look up",
+        github_user="GitHub username to look up",
+    )
+    @bot_decorators.defer(ephemeral=True)
+    @bot_decorators.requires_location(bot_decorators.CommandLocation.GUILD)
+    @bot_decorators.requires_roles(bot_decorators.FunctionalRole.BOT_DEV)
+    @bot_decorators.handle_command_errors()
+    async def who(
+        self,
+        interaction: discord.Interaction,
+        member: discord.Member | None = None,
+        github_user: str | None = None,
+    ) -> None:
+        if github_user is not None:
+            username = (github_user.strip()).lower()
+            linked = await self.client.stores.git_links.find_one(github_username=username)
+            target = github_user
+        elif member is not None:
+            disc_id = member.id
+            linked = await self.client.stores.git_links.find_one(discord_user_id=disc_id)
+            target = member.mention
+        elif github_user is None and member is None:
+            await interaction.followup.send(
+                content="Please provide either a member or a github_username, not both or neither."
+            )
+            return
+        if linked is None:
+            await interaction.followup.send(
+                content=f"No linked GitHub account found for {target}.",
+                allowed_mentions=discord.AllowedMentions.none(),
+            )
+            return
+
+        await interaction.followup.send(
+            content=f"<@{linked.discord_user_id}> (ID: {linked.discord_user_id}) is {linked.github_username}"
+        )
