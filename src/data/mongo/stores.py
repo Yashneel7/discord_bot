@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, TypeVar
 from src.data.mongo._base import TypedCollection
 from src.data.mongo.collections.anon_bans import AnonBanStore
 from src.data.mongo.collections.anon_mutes import AnonMuteStore
+from src.data.mongo.collections.git_links import GitLinkStore
 from src.data.mongo.collections.links import LinkStore
 from src.data.mongo.collections.mutes import MuteStore
 from src.data.mongo.collections.students import StudentStore
@@ -24,6 +25,7 @@ class Stores:
     anon_mutes: AnonMuteStore
     anon_bans: AnonBanStore
     _stores: list[TypedCollection]
+    git_link: GitLinkStore
 
     def __init__(self, db: AsyncDatabase) -> None:
         self._stores = []
@@ -32,6 +34,7 @@ class Stores:
         self.mutes = self._bind(db, "mutes", MuteStore)
         self.anon_mutes = self._bind(db, "anon_mutes", AnonMuteStore)
         self.anon_bans = self._bind(db, "anon_bans", AnonBanStore)
+        self.git_links = self._bind(db, "git_links", GitLinkStore)
 
     def _bind(self, db: AsyncDatabase, name: str, store_cls: type[StoreT]) -> StoreT:
         """Open ``name``; if the store sets ``has_archive``, also open its archive twin."""

@@ -24,6 +24,13 @@ class AtlasProject:
     client_secret: str | None
 
 
+@dataclass(frozen=True, slots=True)
+class GitProject:
+    team_id: int | None
+    app_id: int | None
+    installation_id: int | None
+
+
 class Config:
     """Configuration class."""
 
@@ -64,7 +71,12 @@ class Config:
             "client_secret_env": "ATLAS_PROD_CLIENT_SECRET",
         },
     }
-
+    # GitHub App (/eng git join)
+    GITHUB = {
+        "team_id": 13721979,
+        "app_id": 5114851,
+        "installation_id": 165960075,
+    }
     ROLES = {
         "ADMIN": 742800061280550923,
         "MOD": 742798158966292640,
@@ -73,6 +85,7 @@ class Config:
         "LINKED": 749683320941445250,
         "JUST_JOINED": 798765678739062804,
         "MUTED": 775981947079491614,
+        "DEV_ENGINEER": 810507351063920671,
     }
 
     # Guild academic roles use this color (#818689).
@@ -131,6 +144,13 @@ class Config:
         self.bot = bot
         self.guild_id = self.GUILD_ID
         self.env = env
+        self.github = GitProject(
+            team_id=self.GITHUB["team_id"], app_id=self.GITHUB["app_id"], installation_id=self.GITHUB["installation_id"]
+        )
+        self.github_app_private_key_path = os.getenv(
+            "GITHUB_APP_PRIVATE_KEY_PATH",
+            "scratch/github-app.pem",
+        )
         self.db_name = self.DB_NAME
         env_cfg = self.ENVIRONMENTS[env]
         self.mongo_uri = env_cfg["mongo_uri"]
@@ -260,3 +280,8 @@ class Config:
     def honeypot_channel(self) -> discord.TextChannel | discord.Thread:
         """Get honeypot channel."""
         return self.get_channel("HONEYPOT")
+
+    @property
+    def dev_engineer_role(self) -> discord.Role:
+        """Get bot engineer role."""
+        return self.get_role("DEV_ENGINEER")

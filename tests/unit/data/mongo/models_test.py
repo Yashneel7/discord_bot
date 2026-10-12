@@ -14,6 +14,7 @@ from src.data.mongo import (
     AnonBanStore,
     AnonMute,
     AnonMuteStore,
+    GitLinkStore,
     Link,
     LinkStore,
     Mute,
@@ -401,8 +402,9 @@ async def test_student_store_and_stores_container() -> None:
     assert isinstance(stores.anon_bans, AnonBanStore)
     assert isinstance(stores.anon_mutes, AnonMuteStore)
     assert isinstance(stores.mutes, MuteStore)
+    assert isinstance(stores.git_links, GitLinkStore)
     # 5 hot collections + 3 archive twins
-    assert len(stores._stores) == 8
+    assert len(stores._stores) == 9
     assert isinstance(stores.mutes.archive, MuteStore)
     assert stores.mutes.archive.has_archive is False
     assert stores.links.archive is None
