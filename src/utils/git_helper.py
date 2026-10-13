@@ -12,7 +12,7 @@ def mint_app_jwt(app_id: int, private_key_pem: str) -> str:
     payload = {
         "iat": now - 10,
         "exp": now + 60,  # 60s lifetime
-        "iss": app_id,
+        "iss": str(app_id),
     }
     return jwt.encode(payload, private_key_pem, algorithm="RS256")
 
